@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Do you love me?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="card">
+  <h1>Do you love me ?? <span class="heart">💖</span></h1>
+  <div class="buttons">
+    <a class="btn yes" href="yes.html">Yes</a>
+    <button class="btn no" id="no" type="button">No</button>
+  </div>
+  <p class="hint" id="hint"></p>
+</main>
+
+<script>
+const no = document.getElementById('no');
+const hint = document.getElementById('hint');
+const DANGER = 110;            // how close the cursor can get (px)
+const lines = ["Nice try 😏","Too slow!","Catch me if you can 🏃","Nope, not allowed","Just say yes 🥺","Are you sure? 😘"];
+let tries = 0;
+
+function dodge(px, py){
+  const w = no.offsetWidth, h = no.offsetHeight, m = 16;
+  if (!no.classList.contains('running')){
+    // lock the button where it currently is, then let it fly
+    const r = no.getBoundingClientRect();
+    no.style.left = r.left + 'px';
+    no.style.top = r.top + 'px';
+    no.classList.add('running');
+    no.getBoundingClientRect(); // force layout so the first move animates
+  }
+  let x, y, tries2 = 0;
+  do {
+    x = m + Math.random() * (innerWidth - w - 2*m);
+    y = m + Math.random() * (innerHeight - h - 2*m);
+    tries2++;
+  } while (Math.hypot(x + w/2 - px, y + h/2 - py) < 250 && tries2 < 30);
+  no.style.left = x + 'px';
+  no.style.top = y + 'px';
+  hint.textContent = lines[tries++ % lines.length];
+}
+
+// run when the cursor gets near (so chasing it never works)
+document.addEventListener('pointermove', e => {
+  const r = no.getBoundingClientRect();
+  const cx = r.left + r.width/2, cy = r.top + r.height/2;
+  if (Math.hypot(e.clientX - cx, e.clientY - cy) < DANGER + r.width/2) dodge(e.clientX, e.clientY);
+});
+// phones: dodge before the tap lands
+no.addEventListener('touchstart', e => { e.preventDefault(); const t = e.touches[0]; dodge(t.clientX, t.clientY); }, {passive:false});
+no.addEventListener('pointerdown', e => { e.preventDefault(); dodge(e.clientX, e.clientY); });
+// keyboard users can't click it either 😈
+no.addEventListener('focus', () => { dodge(innerWidth/2, innerHeight/2); no.blur(); });
+no.addEventListener('click', e => e.preventDefault());
+addEventListener('resize', () => { if (no.classList.contains('running')) dodge(-999, -999); });
+</script>
+</body>
+</html>

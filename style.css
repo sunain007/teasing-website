@@ -1,0 +1,33 @@
+:root{--bg1:#ffe3ec;--bg2:#ffc2d4;--rose:#e8456b;--deep:#7a1f3d;--white:#fff}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{
+  font-family:"Fredoka",system-ui,sans-serif;
+  background:radial-gradient(circle at 30% 20%,var(--bg1),var(--bg2));
+  color:var(--deep);
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;overflow:hidden;padding:24px;
+}
+.card{max-width:560px}
+h1{font-size:clamp(2.2rem,8vw,4rem);margin:0 0 .6em;font-weight:600;line-height:1.1}
+.heart{display:inline-block;animation:beat 1.2s ease-in-out infinite}
+@keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
+.buttons{display:flex;gap:20px;justify-content:center;align-items:center;min-height:64px}
+.btn{
+  font:inherit;font-size:1.3rem;font-weight:500;
+  padding:.7em 1.8em;border:0;border-radius:999px;cursor:pointer;
+  text-decoration:none;display:inline-block;
+}
+.yes{background:var(--rose);color:var(--white);box-shadow:0 6px 0 #b82f52;transition:transform .15s}
+.yes:hover{transform:scale(1.08)}
+.yes:active{transform:translateY(4px);box-shadow:0 2px 0 #b82f52}
+.no{background:var(--white);color:var(--deep);box-shadow:0 6px 0 #e3b3c2}
+/* once it starts running, it floats freely with a springy glide */
+.no.running{
+  position:fixed;margin:0;z-index:10;
+  transition:left .45s cubic-bezier(.34,1.56,.64,1),top .45s cubic-bezier(.34,1.56,.64,1);
+}
+.hint{margin-top:2em;font-size:1rem;opacity:.7;min-height:1.5em}
+.floaty{position:fixed;bottom:-40px;font-size:2rem;animation:rise linear forwards;pointer-events:none}
+@keyframes rise{to{transform:translateY(-115vh) rotate(25deg);opacity:0}}
+@media (prefers-reduced-motion:reduce){.heart{animation:none}.no.running{transition:none}}
